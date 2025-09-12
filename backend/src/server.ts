@@ -21,11 +21,11 @@ mongoose
     process.exit(1);
   });
 
+
 app.use("/api/sources", sourceRoutes);
 app.get("/", (_req, res) => res.send("Backend running"));
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
 

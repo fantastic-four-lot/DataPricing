@@ -15,8 +15,8 @@ async function seed() {
   }
 
   const docs = [
-    { name: "Source A", availableData: 10000, buyingPrice: 2.0, enrichmentPrice: 1.5, sellingPrice: 5.0 },
-    { name: "Source B", availableData: 5000, buyingPrice: 1.2, enrichmentPrice: 0.8, sellingPrice: 3.5 }
+    { name: "Source A", availableData: 10000, buyingPrice: 2.0, sellingPrice: 5.0 },
+    { name: "Source B", availableData: 5000, buyingPrice: 1.2, sellingPrice: 3.5 }
   ];
 
   await Source.insertMany(docs);

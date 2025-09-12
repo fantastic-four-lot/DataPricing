@@ -6,8 +6,9 @@ const router = Router();
 // List sources
 router.get("/", async (_req, res) => {
   try {
-    const sources = await Source.find({}, "name");
+    const sources = await Source.find({});
     res.json(sources);
+    console.log(sources);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
@@ -26,9 +27,26 @@ router.get("/:id", async (req, res) => {
 
 // Create source (optional)
 router.post("/", async (req, res) => {
+ 
   try {
-    const { name, availableData, buyingPrice, enrichmentPrice, sellingPrice } = req.body;
-    const src = new Source({ name, availableData, buyingPrice, enrichmentPrice, sellingPrice });
+    const { 
+  name, 
+  availableData, 
+  buyingPrice, 
+  sellingPrice, 
+ 
+  description 
+} = req.body;
+
+const src = new Source({ 
+  name, 
+  availableData, 
+  buyingPrice, 
+  sellingPrice, 
+
+  description, 
+ 
+});
     await src.save();
     res.status(201).json(src);
   } catch (err) {
@@ -40,11 +58,18 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, availableData, buyingPrice, enrichmentPrice, sellingPrice } = req.body;
+    const { 
+  name, 
+  availableData, 
+  buyingPrice, 
+  sellingPrice, 
+ 
+  description 
+} = req.body;
 
     const updatedSource = await Source.findByIdAndUpdate(
       id,
-      { name, availableData, buyingPrice, enrichmentPrice, sellingPrice },
+      { name, availableData, buyingPrice, sellingPrice,description },
       { new: true, runValidators: true } // return the updated document and validate
     );
 
@@ -57,6 +82,8 @@ router.put("/:id", async (req, res) => {
     res.status(400).json({ error: "Invalid data", details: err });
   }
 });
+
+
 
 
 export default router;
