@@ -529,7 +529,7 @@ export default function DataForm() {
       }
 
       // create transaction (adjust endpoint if your api differs)
-      await api.post("/api/transactions", transactionData)
+      await api.post("/api/history", transactionData)
 
       // update source availability (adjust if your api uses different path)
       const updated = await api.put(`/api/sources/${selectedId}`, { availableData: newAvailableData })

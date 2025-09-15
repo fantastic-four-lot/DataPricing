@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import sourceRoutes from "./routes/sourceRoutes";
+import transactionRoutes from "./routes/transactionRoutes";
+
 
 dotenv.config();
 
@@ -23,9 +25,13 @@ mongoose
 
 
 app.use("/api/sources", sourceRoutes);
+app.use("/api/history", transactionRoutes);
 app.get("/", (_req, res) => res.send("Backend running"));
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+
+
 
