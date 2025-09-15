@@ -209,7 +209,7 @@ export default function TransactionHistory() {
                 placeholder="Search by data source..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 placeholder:text-gray-500"
               />
             </div>
 

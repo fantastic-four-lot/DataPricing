@@ -569,7 +569,7 @@ export default function DataForm() {
           <div className="space-y-2">
             <Label htmlFor="source-select">Source of Data</Label>
             <Select value={selectedId} onValueChange={(val) => setSelectedId(val)}>
-  <SelectTrigger>
+                <SelectTrigger className="h-16 text-sm border-2 border-border data-[placeholder]:text-gray-500 text-black [&_svg:not([class*='text-'])]:text-gray-500 hover:border-primary/50 transition-all duration-200 bg-input">
     <SelectValue 
       placeholder="Select a data source"
       className="text-gray-500"   // 👈 this styles the placeholder
