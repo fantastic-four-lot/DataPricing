@@ -566,23 +566,23 @@ export default function DataForm() {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Source Selection */}
-          <div className="space-y-2">
+          <div className="flex gap-4">
             <Label htmlFor="source-select">Source of Data</Label>
             <Select value={selectedId} onValueChange={(val) => setSelectedId(val)}>
-  <SelectTrigger>
-    <SelectValue 
-      placeholder="Select a data source"
-      className="text-gray-500"   // 👈 this styles the placeholder
-    />
-  </SelectTrigger>
-  <SelectContent>
-    {sources.map((s) => (
-      <SelectItem key={s._id} value={s._id}>
-        {s.name}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+                <SelectTrigger className="data-[placeholder]:text-gray-500 [&_svg:not([class*='text-'])]:text-gray-500"  >
+                  <SelectValue 
+                    placeholder="Select a data source"
+                    
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {sources.map((s) => (
+                    <SelectItem key={s._id} value={s._id}>
+                      {s.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
           </div>
 
           {loading && (
@@ -728,7 +728,7 @@ export default function DataForm() {
                   loading || !selectedSource || noOfData <= 0 || noOfData > (selectedSource?.availableData ?? 0)
                 }
               >
-                {loading ? "Processing..." : "Submit Transaction"}
+                {loading ? "Processing..." : "Submit"}
               </Button>
             </>
           )}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Key, useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { History, Search, Download, TrendingUp, TrendingDown } from "lucide-react"
-import { api, type Transaction } from "@/lib/api"
+import  api from "@/lib/api"
 
 const fmt = (n: number) => (Number.isFinite(n) ? n.toFixed(2) : "0.00")
 
@@ -34,6 +34,21 @@ const getStatusColor = (status: string) => {
       return "bg-muted text-muted-foreground"
   }
 }
+type Transaction = {
+  timestamp: string | number | Date
+  _id: Key | null | undefined
+  sourceId: string
+  sourceName: string
+  volume: number
+  buyingPrice: number
+  sellingPrice: number
+  enrichmentCost: number
+  duplicancyDiscount: number
+  totalCost: number
+  profit: number
+  status: string
+}
+
 
 export default function TransactionHistory() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
@@ -46,7 +61,8 @@ export default function TransactionHistory() {
   useEffect(() => {
     const loadTransactions = async () => {
       try {
-        const data = await api.transactions.getAll()
+        // const data = await api.transactions.getAll()
+
         setTransactions(data)
         setFilteredTransactions(data)
       } catch (err) {
