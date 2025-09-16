@@ -389,6 +389,7 @@ export default function DataForm() {
   const [noOfData, setNoOfData] = useState<number>(0)
   const [includeEnrichment, setIncludeEnrichment] = useState<boolean>(false)
   const [userEnrichment, setUserEnrichment] = useState<number>(0)
+  const [sellingprice, setSellingPrice] = useState<number>(0)
 
   const [totalCost, setTotalCost] = useState<number>(0)
   const [profit, setProfit] = useState<number>(0)
@@ -428,6 +429,7 @@ export default function DataForm() {
     if (!selectedId) {
       setSelectedSource(null)
       setNoOfData(0)
+      setSellingPrice(0)
       setIncludeEnrichment(false)
       setUserEnrichment(0)
       setTotalCost(0)
@@ -443,6 +445,7 @@ export default function DataForm() {
         if (res.data) {
           setSelectedSource(res.data)
           setNoOfData(0)
+          setSellingPrice(0)
           setIncludeEnrichment(false)
           setUserEnrichment(0)
           setTotalCost(0)
@@ -481,7 +484,8 @@ export default function DataForm() {
       setError("")
     }
 
-    const sp = selectedSource.sellingPrice
+    // const sp = selectedSource.sellingPrice
+    const sp = sellingprice
     const bp = selectedSource.buyingPrice
     const ep = includeEnrichment ? userEnrichment : 0
     const units = noOfData
@@ -498,7 +502,7 @@ export default function DataForm() {
 
     const revenue = (sp + (includeEnrichment ? ep : 0) - bp) * units
     setProfit(revenue)
-  }, [selectedSource, noOfData, includeEnrichment, userEnrichment, delicacy])
+  }, [selectedSource, noOfData,sellingprice, includeEnrichment, userEnrichment, delicacy])
 
   const handleSubmit = async () => {
     if (!selectedId || noOfData <= 0 || !selectedSource) {
@@ -520,7 +524,8 @@ export default function DataForm() {
         sourceName: selectedSource.name,
         volume: noOfData,
         buyingPrice: selectedSource.buyingPrice,
-        sellingPrice: selectedSource.sellingPrice,
+        // sellingPrice: selectedSource.sellingPrice,
+        sellingPrice: sellingprice,
         enrichmentCost: includeEnrichment ? userEnrichment : 0,
         duplicancyDiscount: delicacy,
         totalCost,
@@ -544,6 +549,7 @@ export default function DataForm() {
       setError("")
       // Reset form
       setNoOfData(0)
+      setSellingPrice(0)
       setIncludeEnrichment(false)
       setUserEnrichment(0)
       setDelicacy(0)
@@ -610,10 +616,23 @@ export default function DataForm() {
                       <Label className="text-sm text-muted">Buying Price</Label>
                       <p className="font-semibold">${fmt(selectedSource.buyingPrice)}</p>
                     </div>
-                    <div className="space-y-1">
+                    {/* <div className="space-y-1">
                       <Label className="text-sm text-muted">Selling Price</Label>
                       <p className="font-semibold">${fmt(selectedSource.sellingPrice)}</p>
+                    </div> */}
+                      <div className="col-span-2 space-y-2">
+                       <Label className="text-sm text-muted">Selling Price</Label>
+                      <Input
+                        id="sellingprice"
+                        type="number"
+                        value={sellingprice}
+                        min={0}
+                        step={1.00}
+                        onChange={(e) => setSellingPrice(Number(e.target.value))}
+                        placeholder="Enter selling price"
+                      />
                     </div>
+
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="enrichment"
