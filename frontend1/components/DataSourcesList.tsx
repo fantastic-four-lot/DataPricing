@@ -56,13 +56,18 @@ export default function DataSourcesList() {
       return
     }
 
-    // try {
-    //   await api.dataSources.delete(id)
-    //   setSources((prev) => prev.filter((source) => source._id !== id))
-    // } catch (err) {
-    //   setError("Failed to delete data source.")
-    //   console.error(err)
-    // }
+    try {
+    setLoading(true);
+    await api.delete(`/api/sources/${id}`);
+    // reload the list after deletion
+    await loadSources();
+    setError("");
+  } catch (err) {
+    setError("Failed to delete source.");
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
   }
 
   if (loading) {
@@ -159,7 +164,7 @@ export default function DataSourcesList() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-destructive hover:text-destructive bg-transparent"
+                    className="text-destructive bg-transparent hover:bg-destructive"
                     onClick={() => handleDelete(source._id, source.name)}
                   >
                     <Trash2 className="h-4 w-4" />
