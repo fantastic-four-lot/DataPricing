@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Edit, Trash2, TrendingUp, Database, AlertCircle, ChevronDown } from "lucide-react"
+import { Edit, Trash2, TrendingUp, Database, AlertCircle, ChevronDown, Search } from "lucide-react"
 import api from "../lib/api"
 import Link from "next/link"
 import { Input } from "./ui/input"
@@ -19,7 +19,7 @@ type DataSource =  {
   name: string
   availableData: number
   buyingPrice: number
-  sellingPrice: number
+  // sellingPrice: number
   description?: string
   createdAt?: string
   updatedAt?: string
@@ -55,7 +55,20 @@ export default function DataSourcesList() {
       return
     }
     // Implement deletion logic here
+  try {
+    setLoading(true);
+    await api.delete(`/api/sources/${id}`);
+    // reload the list after deletion
+    await loadSources();
+    setError("");
+  } catch (err) {
+    setError("Failed to delete source.");
+    console.error(err);
+  } finally {
+    setLoading(false);
   }
+  }
+
 
   const filteredSources = useMemo(() => {
     return sources
@@ -65,13 +78,15 @@ export default function DataSourcesList() {
       .sort((a, b) => {
         if (sortField === "buyingPrice") {
           return a.buyingPrice - b.buyingPrice
-        } else if (sortField === "sellingPrice") {
-          return a.sellingPrice - b.sellingPrice
-        } else if (sortField === "profitMargin") {
-          const profitA = ((a.sellingPrice - a.buyingPrice) / a.sellingPrice) * 100
-          const profitB = ((b.sellingPrice - b.buyingPrice) / b.sellingPrice) * 100
-          return profitA - profitB
-        } else {
+        } 
+        // else if (sortField === "sellingPrice") {
+        //   return a.sellingPrice - b.sellingPrice
+        // } else if (sortField === "profitMargin") {
+        //   const profitA = ((a.sellingPrice - a.buyingPrice) / a.sellingPrice) * 100
+        //   const profitB = ((b.sellingPrice - b.buyingPrice) / b.sellingPrice) * 100
+        //   return profitA - profitB
+        // }
+         else {
           return a.name.localeCompare(b.name)
         }
       })
@@ -109,25 +124,34 @@ export default function DataSourcesList() {
   return (
     <div>
       <div className="mb-4 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-        <Input
+        {/* <Input
           type="text"
           placeholder="Search by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="border-1 border-gray-300 rounded px-3 py-2 w-full md:w-1/3 placeholder:text-gray-700 bg-blue-50 shadow-lg"
-        />
+        /> */}
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
+          <Input
+            placeholder="Search by name . . ."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10 bg-blue-50 placeholder:text-muted w-md h-9 md:text-md"
+          />
+        </div>
 
         <div className="flex items-center gap-2">
           <Label className="text-sm text-black">Sort By:</Label>
           <Select value={sortField} onValueChange={setSortField}>
-            <SelectTrigger className="w-[180px] border rounded px-3 py-2">
+            <SelectTrigger className="w-[180px] border rounded px-3 py-2 bg-blue-50">
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem  value="name">Name</SelectItem>
               <SelectItem  value="buyingPrice">Buying Price</SelectItem>
-              <SelectItem  value="sellingPrice">Selling Price</SelectItem>
-              <SelectItem  value="profitMargin">Profit Margin</SelectItem>
+              {/* <SelectItem  value="sellingPrice">Selling Price</SelectItem>
+              <SelectItem  value="profitMargin">Profit Margin</SelectItem> */}
             </SelectContent>
           </Select>
         </div>
@@ -147,7 +171,7 @@ export default function DataSourcesList() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredSources.map((source) => {
-            const profitMargin = ((source.sellingPrice - source.buyingPrice) / source.sellingPrice) * 100
+            // const profitMargin = ((source.sellingPrice - source.buyingPrice) / source.sellingPrice) * 100
 
             return (
               <Card key={source._id} className="hover:shadow-md transition-shadow pt-0">
@@ -168,17 +192,17 @@ export default function DataSourcesList() {
                         <span className="text-muted">Buying Price</span>
                         <p className="font-semibold">${fmt(source.buyingPrice)}</p>
                       </div>
-                      <div>
+                      {/* <div>
                         <span className="text-muted">Selling Price</span>
                         <p className="font-semibold">${fmt(source.sellingPrice)}</p>
-                      </div>
+                      </div> */}
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm">
+                    {/* <div className="flex items-center gap-2 text-sm">
                       <TrendingUp className="h-4 w-4 text-chart-5" />
                       <span className="text-muted">Profit Margin:</span>
                       <span className="font-semibold text-chart-5">{fmt(profitMargin)}%</span>
-                    </div>
+                    </div> */}
 
                     <div className="flex gap-2 pt-2">
                       <Link href={`/add-data?id=${source._id}`} className="flex-1 bg-transparent">

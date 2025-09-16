@@ -9,18 +9,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { History, Search, Download, TrendingUp, TrendingDown } from "lucide-react"
 import  api  from "@/lib/api"
+import moment from "moment-timezone";
+import ExportButtons from "./export"
 
 const fmt = (n: number) => (Number.isFinite(n) ? n.toFixed(2) : "0.00")
 
+// const formatDate = (dateValue: string | number | Date) => {
+//   return new Date(dateValue).toLocaleDateString("en-US", {
+//     year: "numeric",
+//     month: "short",
+//     day: "numeric",
+//     hour: "2-digit",
+//     minute: "2-digit",
+//   })
+// }
+
+
+// import moment from "moment-timezone";
+
 const formatDate = (dateValue: string | number | Date) => {
-  return new Date(dateValue).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  })
-}
+  if (!dateValue) return "-"; // fallback if missing
+  return moment.utc(dateValue)   // treat as UTC
+    .tz("Asia/Kolkata")          // convert to IST
+    .format("DD-MM-YYYY hh:mm A");
+};
+
+
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -47,6 +61,7 @@ type Transaction = {
   totalCost: number
   profit: number
   status: string
+  createdAt: string
 }
 
 
@@ -92,8 +107,8 @@ export default function TransactionHistory() {
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case "timestamp":
-          return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        case "createdAt":   // 👈 match your DB field name
+      return new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()
         case "volume":
           return b.volume - a.volume
         case "profit":
@@ -143,9 +158,9 @@ export default function TransactionHistory() {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="bg-blue-100 hover:bg-gray-100">
+        <Card className="bg-blue-100 hover:bg-white hover:shadow-xl">
           <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between ">
               <div>
                 <p className="text-sm text-muted">Total</p>
                 <p className="text-2xl font-bold">{totalTransactions}</p>
@@ -155,7 +170,7 @@ export default function TransactionHistory() {
           </CardContent>
         </Card>
 
-        <Card className="bg-blue-100 hover:bg-gray-100">
+        <Card className="bg-blue-100 hover:bg-white hover:shadow-xl">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -167,7 +182,7 @@ export default function TransactionHistory() {
           </CardContent>
         </Card>
 
-        <Card className="bg-blue-100 hover:bg-gray-100">
+        <Card className="bg-blue-100 hover:bg-white  hover:shadow-xl">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -179,7 +194,7 @@ export default function TransactionHistory() {
           </CardContent>
         </Card>
 
-        <Card className="bg-blue-100 hover:bg-gray-100">
+        <Card className="bg-blue-100 hover:bg-white hover:shadow-xl">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -209,7 +224,6 @@ export default function TransactionHistory() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 bg-white placeholder:text-muted"
-
               />
             </div>
 
@@ -237,10 +251,15 @@ export default function TransactionHistory() {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm" className="bg-chart-5 text-white font-semibold hover:bg-black">
+           {/* <Button variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
-              Export
+              Excel
             </Button>
+             <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              PDF
+            </Button> */}
+            <ExportButtons filteredTransactions={filteredTransactions}  />
           </div>
 
           {/* Transactions Table */}
@@ -288,8 +307,8 @@ export default function TransactionHistory() {
                         <Badge className={getStatusColor(transaction.status)}>{transaction.status}</Badge>
                       </TableCell>
                       <TableCell className="text-center text-sm text-muted">
-                        {formatDate(transaction.timestamp)}
-                      </TableCell>
+                      {formatDate(transaction.createdAt ?? "")}
+                    </TableCell>
                     </TableRow>
                   ))
                 )}

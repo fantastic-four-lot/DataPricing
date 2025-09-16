@@ -17,7 +17,7 @@ type NewDataSource = {
   name: string
   availableData: number
   buyingPrice: number
-  sellingPrice: number
+  // sellingPrice: number
   enrichmentPrice?: number
   description?: string
 }
@@ -28,7 +28,7 @@ export default function AddDataForm({id}: {id:string}) {
     name: "",
     availableData: 0,
     buyingPrice: 0,
-    sellingPrice: 0,
+    // sellingPrice: 0,
     description: "",
   })
   // console.log("Received ID prop:", id.id);
@@ -46,7 +46,7 @@ export default function AddDataForm({id}: {id:string}) {
       name: "",
       availableData: 0,
       buyingPrice: 0,
-      sellingPrice: 0,
+      // sellingPrice: 0,
       description: "",
     })
   } else{
@@ -56,7 +56,7 @@ export default function AddDataForm({id}: {id:string}) {
             name: source.name,
             availableData: source.availableData,
             buyingPrice: source.buyingPrice,
-            sellingPrice: source.sellingPrice,
+            // sellingPrice: source.sellingPrice,
             description: source.description || "",
           });}
         } catch (error) {
@@ -95,14 +95,14 @@ export default function AddDataForm({id}: {id:string}) {
       setError("Buying price cannot be negative")
       return false
     }
-    if (formData.sellingPrice <= 0) {
-      setError("Selling price must be greater than 0")
-      return false
-    }
-    if (formData.sellingPrice <= formData.buyingPrice) {
-      setError("Selling price must be higher than buying price")
-      return false
-    }
+    // if (formData.sellingPrice <= 0) {
+    //   setError("Selling price must be greater than 0")
+    //   return false
+    // }
+    // if (formData.sellingPrice <= formData.buyingPrice) {
+    //   setError("Selling price must be higher than buying price")
+    //   return false
+    // }
     return true
   }
 
@@ -130,10 +130,10 @@ export default function AddDataForm({id}: {id:string}) {
     }
   }
 
-  const profitMargin =
-    formData.sellingPrice > 0 && formData.buyingPrice >= 0
-      ? ((formData.sellingPrice - formData.buyingPrice) / formData.sellingPrice) * 100
-      : 0
+  // const profitMargin =
+  //   formData.sellingPrice > 0 && formData.buyingPrice >= 0
+  //     ? ((formData.sellingPrice - formData.buyingPrice) / formData.sellingPrice) * 100
+  //     : 0
 
   if (success) {
     return (
@@ -219,7 +219,7 @@ export default function AddDataForm({id}: {id:string}) {
                     value={formData.buyingPrice}
                     onChange={(e) => handleInputChange("buyingPrice", Number(e.target.value))}
                     placeholder="0.00"
-                    step={0.01}
+                    step={1}
                     min={0}
                     className="pl-8 bg-white h-11"
                     
@@ -228,7 +228,7 @@ export default function AddDataForm({id}: {id:string}) {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="sellingPrice">Selling Price per Record <span className="text-destructive">*</span></Label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted">$</span>
@@ -244,12 +244,12 @@ export default function AddDataForm({id}: {id:string}) {
                     required
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
           {/* Profit Calculation Preview */}
-          {formData.sellingPrice > 0 && formData.buyingPrice >= 0 && (
+          {/* {formData.sellingPrice > 0 && formData.buyingPrice >= 0 && (
             <Card className="bg-blue-100">
               <CardContent className="">
                 <div className="flex items-center justify-between">
@@ -266,7 +266,7 @@ export default function AddDataForm({id}: {id:string}) {
                 </div>
               </CardContent>
             </Card>
-          )}
+          )} */}
 
           {error && (
             <Alert variant="destructive">
