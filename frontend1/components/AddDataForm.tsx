@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Plus, AlertCircle, CheckCircle } from "lucide-react"
 import api from "@/lib/api"
+import { Separator } from "./ui/separator"
 
 type NewDataSource = {
   name: string
@@ -153,18 +154,11 @@ export default function AddDataForm({id}: {id:string}) {
    
 
      <Card className="">
-      <CardHeader>
-        {/* <CardTitle className="flex items-center gap-2">
-          <Plus className="h-5 w-5" />
-          Add New Data Source
-        </CardTitle> */}
-        
-      </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
-          <div className="space-y-8">
-            <h3 className="text-lg font-semibold">Basic Information</h3>
+            <h3 className="text-lg font-bold">Basic Information</h3>
+          <div className="space-y-8 grid grid-cols-2 gap-4">
 
             <div className="space-y-2">
               <Label htmlFor="name">Data Source Name<span className="text-destructive">*</span> </Label>
@@ -174,22 +168,12 @@ export default function AddDataForm({id}: {id:string}) {
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
                 placeholder="e.g., Customer Demographics, Market Research Data"
-                className="placeholder:text-gray-500" // 👈 control placeholder color
+                className="placeholder:text-gray-500 bg-white" 
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description (Optional)</Label>
-              <Textarea
-                id="description"
-                value={formData.description || ""}
-                onChange={(e) => handleInputChange("description", e.target.value)}
-                placeholder="Brief description of the data source..."
-                className="placeholder:text-gray-500" // 👈 control placeholder color
-                rows={3}
-              />
-            </div>
+            
 
             <div className="space-y-2">
               <Label htmlFor="availableData">Available Data Records <span className="text-destructive">*</span></Label>
@@ -199,15 +183,30 @@ export default function AddDataForm({id}: {id:string}) {
                 value={formData.availableData}
                 onChange={(e) => handleInputChange("availableData", Number(e.target.value))}
                 placeholder="Number of available records"
+                className="placeholder:text-gray-500 bg-white" 
                 min={1}
                 required
               />
             </div>
+
+            <div className="space-y-2 col-span-2">
+              <Label htmlFor="description">Description (Optional)</Label>
+              <Textarea
+                id="description"
+                value={formData.description || ""}
+                onChange={(e) => handleInputChange("description", e.target.value)}
+                placeholder="Brief description of the data source..."
+                className="placeholder:text-gray-500 bg-white" 
+                rows={2}
+              />
+            </div>
           </div>
 
+          <Separator className="border-1"/>
+
           {/* Pricing Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Pricing Information</h3>
+          <div className="space-y-8">
+            <h3 className="text-lg font-bold">Pricing Information</h3>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -222,7 +221,8 @@ export default function AddDataForm({id}: {id:string}) {
                     placeholder="0.00"
                     step={0.01}
                     min={0}
-                    className="pl-8"
+                    className="pl-8 bg-white h-11"
+                    
                     required
                   />
                 </div>
@@ -240,43 +240,26 @@ export default function AddDataForm({id}: {id:string}) {
                     placeholder="0.00"
                     step={0.01}
                     min={0}
-                    className="pl-8"
+                    className="pl-8 bg-white h-11"
                     required
                   />
                 </div>
               </div>
             </div>
-
-            {/* <div className="space-y-2">
-              <Label htmlFor="enrichmentPrice">Enrichment Price per Record (Optional)</Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted">$</span>
-                <Input
-                  id="enrichmentPrice"
-                  type="number"
-                  value={formData.enrichmentPrice || ""}
-                  onChange={(e) => handleInputChange("enrichmentPrice", Number(e.target.value))}
-                  placeholder="0.00"
-                  step={0.01}
-                  min={0}
-                  className="pl-8"
-                />
-              </div>
-            </div> */}
           </div>
 
           {/* Profit Calculation Preview */}
           {formData.sellingPrice > 0 && formData.buyingPrice >= 0 && (
-            <Card className="bg-accent/5">
-              <CardContent className="pt-4">
+            <Card className="bg-blue-100">
+              <CardContent className="">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted">Estimated Profit Margin</span>
+                  <span className="text-sm text-gray-700">Estimated Profit Margin</span>
                   <span className={`font-semibold ${profitMargin > 0 ? "text-chart-5" : "text-destructive"}`}>
                     {profitMargin.toFixed(2)}%
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-sm text-muted">Profit per Record</span>
+                  <span className="text-sm text-gray-700">Profit per Record</span>
                   <span className={`font-semibold ${profitMargin > 0 ? "text-chart-5" : "text-destructive"}`}>
                     ${(formData.sellingPrice - formData.buyingPrice).toFixed(2)}
                   </span>
@@ -293,7 +276,7 @@ export default function AddDataForm({id}: {id:string}) {
           )}
 
           <div className="flex gap-4">
-            <Button type="button" variant="outline" onClick={() => router.push("/")} className="flex-1">
+            <Button type="button" variant="outline"  onClick={() => router.push("/")} className="flex-1 hover:bg-red-600">
               Cancel
             </Button>
             <Button type="submit" disabled={loading} className="flex-1">

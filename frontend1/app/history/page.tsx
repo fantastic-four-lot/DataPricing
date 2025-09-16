@@ -7,7 +7,7 @@ export default function HistoryPage() {
       <Header />
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground text-balance">Transaction History</h1>
+          <h1 className="text-3xl font-bold text-foreground text-balance">History</h1>
           <p className="mt-2 text-muted text-pretty">
             View all your data transactions, pricing calculations, and purchase history.
           </p>

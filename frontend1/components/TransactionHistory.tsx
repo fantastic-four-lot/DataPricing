@@ -8,12 +8,12 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { History, Search, Download, TrendingUp, TrendingDown } from "lucide-react"
-import  api from "@/lib/api"
+import  api  from "@/lib/api"
 
 const fmt = (n: number) => (Number.isFinite(n) ? n.toFixed(2) : "0.00")
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("en-US", {
+const formatDate = (dateValue: string | number | Date) => {
+  return new Date(dateValue).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -61,10 +61,9 @@ export default function TransactionHistory() {
   useEffect(() => {
     const loadTransactions = async () => {
       try {
-        // const data = await api.transactions.getAll()
-
-        setTransactions(data)
-        setFilteredTransactions(data)
+        const response = await api.get("/api/history")
+        setTransactions(response.data)
+        setFilteredTransactions(response.data)
       } catch (err) {
         console.error("Failed to load transactions:", err)
       } finally {
@@ -144,11 +143,11 @@ export default function TransactionHistory() {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card>
+        <Card className="bg-blue-100 hover:bg-gray-100">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted">Total Transactions</p>
+                <p className="text-sm text-muted">Total</p>
                 <p className="text-2xl font-bold">{totalTransactions}</p>
               </div>
               <History className="h-8 w-8 text-muted" />
@@ -156,7 +155,7 @@ export default function TransactionHistory() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-blue-100 hover:bg-gray-100">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -168,7 +167,7 @@ export default function TransactionHistory() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-blue-100 hover:bg-gray-100">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -180,7 +179,7 @@ export default function TransactionHistory() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-blue-100 hover:bg-gray-100">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -194,11 +193,11 @@ export default function TransactionHistory() {
       </div>
 
       {/* Filters and Search */}
-      <Card>
+      <Card className="">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <History className="h-5 w-5" />
-            Transaction History
+             History
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -209,12 +208,13 @@ export default function TransactionHistory() {
                 placeholder="Search by data source..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white placeholder:text-muted"
+
               />
             </div>
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] bg-white placeholder:text-muted">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
@@ -226,7 +226,7 @@ export default function TransactionHistory() {
             </Select>
 
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] bg-white placeholder:text-muted">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -237,7 +237,7 @@ export default function TransactionHistory() {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="bg-chart-5 text-white font-semibold hover:bg-black">
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
@@ -246,36 +246,36 @@ export default function TransactionHistory() {
           {/* Transactions Table */}
           <div className="rounded-md border">
             <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Data Source</TableHead>
-                  <TableHead className="text-right">Volume</TableHead>
-                  <TableHead className="text-right">Total Cost</TableHead>
-                  <TableHead className="text-right">Profit</TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                  <TableHead className="text-right">Date</TableHead>
+              <TableHeader className="bg-blue-100">
+                <TableRow className="hover:bg-blue-100">
+                  <TableHead className="font-bold ">Data Source</TableHead>
+                  <TableHead className="text-center font-bold">Volume</TableHead>
+                  <TableHead className="text-right font-bold">Total Cost</TableHead>
+                  <TableHead className="text-right font-bold">Profit</TableHead>
+                  <TableHead className="text-center font-bold">Status</TableHead>
+                  <TableHead className="text-center font-bold">Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredTransactions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-8 text-muted">
-                      No transactions found
+                      No history found
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredTransactions.map((transaction) => (
-                    <TableRow key={transaction._id}>
+                    <TableRow className="hover:bg-white" key={transaction._id}>
                       <TableCell className="font-medium">
                         <div>
                           <p className="font-semibold">{transaction.sourceName}</p>
                           {transaction.enrichmentCost > 0 && <p className="text-xs text-muted">+ Enrichment</p>}
                           {transaction.duplicancyDiscount > 0 && (
-                            <p className="text-xs text-muted">{transaction.duplicancyDiscount}% discount</p>
+                            <p className="text-xs text-muted">{transaction.duplicancyDiscount}% </p>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">{transaction.volume.toLocaleString()}</TableCell>
+                      <TableCell className="text-center">{transaction.volume.toLocaleString()}</TableCell>
                       <TableCell className="text-right font-semibold">${fmt(transaction.totalCost)}</TableCell>
                       <TableCell className="text-right">
                         <span
@@ -287,7 +287,7 @@ export default function TransactionHistory() {
                       <TableCell className="text-center">
                         <Badge className={getStatusColor(transaction.status)}>{transaction.status}</Badge>
                       </TableCell>
-                      <TableCell className="text-right text-sm text-muted">
+                      <TableCell className="text-center text-sm text-muted">
                         {formatDate(transaction.timestamp)}
                       </TableCell>
                     </TableRow>

@@ -17,11 +17,11 @@ export default function Header() {
   const pathname = usePathname()
 
   return (
-    <header className="bg-card border-b border-border">
+    <header className="bg-card border-b border-border sticky top-0">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
-            <span className="text-xl font-bold text-primary">DataPricing</span>
+            <span className="text-2xl font-serif text-primary">DPT</span>
           </Link>
         </div>
         <div className="flex lg:hidden">
